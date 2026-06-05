@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeciOps™ — Demo</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#a5351e",
+              "primary-container": "#c74d34",
+              "on-primary": "#ffffff",
+              "secondary": "#5d5c74",
+              "surface": "#faf9f7",
+              "surface-container-low": "#f4f3f1",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#1a1c1b",
+              "on-surface-variant": "#58413d",
+              "outline-variant": "#dfbfb9"
+            },
+            fontFamily: {
+              headline: ["Newsreader", "serif"],
+              display: ["Newsreader", "serif"],
+              body: ["Manrope", "sans-serif"],
+              label: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"]
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html, body, #root { height: 100%; margin: 0; overflow: hidden; }
+      body { font-family: "Manrope", sans-serif; background: #fff; color: #1a1c1b; }
+      * { box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
