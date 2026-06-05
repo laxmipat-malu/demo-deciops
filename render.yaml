@@ -1,21 +1,21 @@
-# Render backend deploy (Express API).
+# Render backend deploy (Express API) — FREE plan, no card required.
 # Frontend deploys separately on Vercel.
+#
+# ⚠️ EPHEMERAL: the free plan has no persistent disk. Uploaded videos and
+# db.json live on the instance's temporary filesystem and are WIPED on every
+# restart, redeploy, or wake-from-idle. Upload + share + view within one
+# session. For durable storage, upgrade to a paid plan + disk (see git history)
+# or switch to external storage (Supabase).
 services:
   - type: web
     name: deciops-demo-api
     runtime: node
-    plan: starter            # 'starter' supports a persistent disk (uploads survive restarts)
+    plan: free
     buildCommand: npm install
     startCommand: node server/index.js
     healthCheckPath: /api/health
     envVars:
-      - key: DATA_DIR
-        value: /data
       - key: ADMIN_PASSWORD
         sync: false          # set in Render dashboard (do NOT commit secrets)
       - key: CORS_ORIGIN
         sync: false          # set to your Vercel URL, e.g. https://deciops-demo.vercel.app
-    disk:
-      name: deciops-data
-      mountPath: /data       # videos + db.json persist here
-      sizeGB: 10
