@@ -35,7 +35,7 @@ export default function Admin() {
   async function login(e) {
     e.preventDefault();
     setPwError('');
-    const r = await fetch('/api/login', {
+    const r = await fetch(apiUrl('/api/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pwInput }),
