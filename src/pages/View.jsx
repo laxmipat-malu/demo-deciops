@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Nav from '../components/Nav';
+import { apiUrl } from '../lib/api';
 
 export default function View() {
   const { token } = useParams();
@@ -8,7 +9,7 @@ export default function View() {
 
   useEffect(() => {
     let alive = true;
-    fetch(`/api/view/${token}`)
+    fetch(apiUrl(`/api/view/${token}`))
       .then(async (r) => {
         const body = await r.json().catch(() => ({}));
         if (!alive) return;
@@ -17,7 +18,7 @@ export default function View() {
           const key = `viewed_${token}`;
           if (!sessionStorage.getItem(key)) {
             sessionStorage.setItem(key, '1');
-            fetch(`/api/view/${token}/hit`, { method: 'POST' }).catch(() => {});
+            fetch(apiUrl(`/api/view/${token}/hit`), { method: 'POST' }).catch(() => {});
           }
         }
         else if (r.status === 403) setState({ status: 'revoked' });
@@ -111,7 +112,7 @@ export default function View() {
                 disablePictureInPicture
                 disableRemotePlayback
                 onContextMenu={(e) => e.preventDefault()}
-                src={`/api/stream/${token}`}
+                src={apiUrl(`/api/stream/${token}`)}
               />
             </div>
 

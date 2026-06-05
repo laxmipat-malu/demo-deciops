@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
+import { apiUrl } from '../lib/api';
 
 const PW_KEY = 'deciops_admin_pw';
 
 function api(path, pw, opts = {}) {
-  return fetch(path, {
+  return fetch(apiUrl(path), {
     ...opts,
     headers: { 'x-admin-password': pw, ...(opts.headers || {}) },
   });
@@ -18,7 +19,7 @@ export default function Admin() {
   // verify stored password on mount
   useEffect(() => {
     if (!pw) return;
-    fetch('/api/login', {
+    fetch(apiUrl('/api/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pw }),
@@ -134,7 +135,7 @@ function Dashboard({ pw, onLogout }) {
     fd.append('description', description);
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/links');
+    xhr.open('POST', apiUrl('/api/links'));
     xhr.setRequestHeader('x-admin-password', pw);
     xhr.upload.onprogress = (ev) => {
       if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100));

@@ -7,8 +7,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const UPLOAD_DIR = path.join(__dirname, 'uploads');
-const DB_PATH = path.join(__dirname, 'db.json');
+// DATA_DIR lets a host mount a persistent disk (e.g. Render /data, Railway volume).
+// Defaults to ./server for local dev.
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
+const DB_PATH = path.join(DATA_DIR, 'db.json');
 const PORT = process.env.PORT || 4000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'deciops2026';
 
@@ -47,8 +50,16 @@ const upload = multer({
 });
 
 const app = express();
-app.use(cors());
+// Restrict to the frontend origin in prod via CORS_ORIGIN (comma-separated).
+// Defaults to open for local/demo use.
+const CORS_ORIGIN = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
+  : true;
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
+
+// Health check (used by host platform)
+app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 // Admin login check
 app.post('/api/login', (req, res) => {

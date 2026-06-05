@@ -1,0 +1,21 @@
+# Render backend deploy (Express API).
+# Frontend deploys separately on Vercel.
+services:
+  - type: web
+    name: deciops-demo-api
+    runtime: node
+    plan: starter            # 'starter' supports a persistent disk (uploads survive restarts)
+    buildCommand: npm install
+    startCommand: node server/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: ADMIN_PASSWORD
+        sync: false          # set in Render dashboard (do NOT commit secrets)
+      - key: CORS_ORIGIN
+        sync: false          # set to your Vercel URL, e.g. https://deciops-demo.vercel.app
+    disk:
+      name: deciops-data
+      mountPath: /data       # videos + db.json persist here
+      sizeGB: 10
