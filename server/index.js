@@ -58,8 +58,32 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-// Health check (used by host platform)
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+// Health check (used by host platform) + storage diagnostics.
+app.get('/api/health', (req, res) => {
+  let writable = false;
+  try {
+    const probe = path.join(UPLOAD_DIR, '.write-probe');
+    fs.writeFileSync(probe, 'ok');
+    fs.unlinkSync(probe);
+    writable = true;
+  } catch {
+    writable = false;
+  }
+  let uploadCount = 0;
+  try {
+    uploadCount = fs.readdirSync(UPLOAD_DIR).filter((f) => !f.startsWith('.')).length;
+  } catch {
+    uploadCount = -1;
+  }
+  res.json({
+    ok: true,
+    dataDir: DATA_DIR,
+    persistent: DATA_DIR === '/data', // true only when the disk env is in effect
+    uploadDir: UPLOAD_DIR,
+    uploadDirWritable: writable,
+    uploadCount,
+  });
+});
 
 // Admin login check
 app.post('/api/login', (req, res) => {
